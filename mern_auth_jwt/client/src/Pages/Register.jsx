@@ -1,12 +1,24 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordVerify, setPasswordVerify] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = () => {
-	
+  const handleSubmit = async(e) => {
+	e.preventDefault();
+
+	try{
+		const registerData = {email, password,confirmPassword};
+
+		const response = await axios.post("http://localhost:5000/auth/",registerData);
+
+		console.log(response);
+
+	}catch(err){
+		console.error(err);
+	}
   };
   return (
     <div>
@@ -25,7 +37,7 @@ const Register = () => {
         <input
           type="password"
           placeholder="Verify your Password"
-          onChange={(e) => setPasswordVerify(e.target.value)}
+          onChange={(e) => setConfirmPassword(e.target.value)}
         ></input>
 
         <button type="submit">Register</button>
