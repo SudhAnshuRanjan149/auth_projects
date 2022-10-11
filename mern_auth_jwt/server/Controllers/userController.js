@@ -109,3 +109,20 @@ export const logoutUser = async (req, res) => {
     .cookie("token", "", { httpOnly: true, expires: new Date(0) })
     .json({ message: "user log out successfully" });
 };
+
+export const isLoggedIn = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.json(false);
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    res.send(true);
+  } catch (err) {
+    console.error(err);
+    res.json(false);
+  }
+};

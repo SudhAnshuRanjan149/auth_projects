@@ -1,24 +1,36 @@
-import React, { useState } from "react";
-import axios from 'axios';
+import React, { useContext, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router";
+
+import AuthContext from "../Context/AuthContext";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = async(e) => {
-	e.preventDefault();
+  const { getLoggedIn } = useContext(AuthContext);
 
-	try{
-		const registerData = {email, password,confirmPassword};
+  const navigate = useNavigate();
 
-		const response = await axios.post("http://localhost:5000/auth/",registerData);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-		console.log(response);
+    try {
+      const registerData = { email, password, confirmPassword };
 
-	}catch(err){
-		console.error(err);
-	}
+      const response = await axios.post(
+        "http://localhost:5000/auth/",
+        registerData
+      );
+
+      if (response.data.message === "User registered successfully.") {
+        await getLoggedIn();
+        navigate("/customers");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <div>
